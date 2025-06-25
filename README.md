@@ -1,5 +1,7 @@
 # Claude GPT - AI Chat Application
 
+[🇺🇸 English](./README.md) | [🇨🇳 中文](./README_zh.md)
+
 A modern AI chat application built with React Native (frontend) and Node.js (backend), featuring a complete ChatGPT-like experience with subscription management, data export, and cloud synchronization.
 
 ## 🚀 Features
