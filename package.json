@@ -70,12 +70,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/claude-gpt.git"
+    "url": "https://github.com/yipoo/claude-gpt.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/claude-gpt/issues"
+    "url": "https://github.com/yipoo/claude-gpt/issues"
   },
-  "homepage": "https://github.com/your-username/claude-gpt#readme",
-  "author": "Your Name <your.email@example.com>",
+  "homepage": "https://github.com/yipoo/claude-gpt#readme",
+  "author": "yipoo",
   "license": "MIT"
 }
