@@ -1,4 +1,15 @@
 .claude
 .promptx
 
+UI/
 
+
+frontend/node_modules
+frontend/dist
+frontend/build
+frontend/logs
+frontend/logs/*
+
+backend/node_modules
+backend/dist
+backend/build
