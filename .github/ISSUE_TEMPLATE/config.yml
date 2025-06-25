@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 讨论区
+    url: https://github.com/yipoo/claude-gpt/discussions
+    about: 如果你有问题或想法，可以在讨论区交流
+  - name: 📖 文档
+    url: https://github.com/yipoo/claude-gpt/tree/master/docs
+    about: 查看项目文档和技术说明
