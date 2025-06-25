@@ -1,0 +1,81 @@
+{
+  "name": "claude-gpt-monorepo",
+  "version": "1.0.0",
+  "description": "Claude GPT - AI Chat Application with Frontend and Backend",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "packageManager": "pnpm@8.15.6",
+  "scripts": {
+    "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev:frontend": "cd frontend && pnpm run start",
+    "dev:backend": "cd backend && pnpm run dev",
+    "build": "pnpm run build:backend && pnpm run build:frontend",
+    "build:frontend": "cd frontend && pnpm run build",
+    "build:backend": "cd backend && pnpm run build",
+    "test": "pnpm run test:frontend && pnpm run test:backend",
+    "test:frontend": "cd frontend && pnpm run test",
+    "test:backend": "cd backend && pnpm run test",
+    "lint": "pnpm run lint:frontend && pnpm run lint:backend",
+    "lint:frontend": "cd frontend && pnpm run lint",
+    "lint:backend": "cd backend && pnpm run lint",
+    "type-check": "pnpm run type-check:frontend && pnpm run type-check:backend",
+    "type-check:frontend": "cd frontend && pnpm run type-check",
+    "type-check:backend": "cd backend && pnpm run type-check",
+    "clean": "pnpm run clean:frontend && pnpm run clean:backend",
+    "clean:frontend": "cd frontend && rm -rf node_modules && rm -rf .expo",
+    "clean:backend": "cd backend && rm -rf node_modules && rm -rf dist",
+    "reset": "pnpm run clean && rm -rf node_modules && pnpm install",
+    "setup": "pnpm install && pnpm run setup:frontend && pnpm run setup:backend",
+    "setup:frontend": "cd frontend && pnpm install",
+    "setup:backend": "cd backend && pnpm install && pnpm run db:generate",
+    "db:setup": "cd backend && pnpm run db:push && pnpm run db:seed",
+    "db:migrate": "cd backend && pnpm run db:migrate",
+    "db:studio": "cd backend && pnpm run db:studio",
+    "release": "changeset version && changeset publish",
+    "changeset": "changeset"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.5",
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.6.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "nodejs",
+    "typescript",
+    "ai",
+    "chatgpt",
+    "monorepo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/claude-gpt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/claude-gpt/issues"
+  },
+  "homepage": "https://github.com/your-username/claude-gpt#readme",
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT"
+}

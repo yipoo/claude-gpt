@@ -1,0 +1,23 @@
+packages:
+  - "frontend"
+  - "backend"
+  - "shared/*"
+  - "packages/*"
+
+# Optional: Shared dependencies resolution
+catalog:
+  # TypeScript versions
+  typescript: "^5.3.3"
+  
+  # React Native ecosystem
+  react: "^18.2.0"
+  react-native: "^0.74.1"
+  
+  # Node.js ecosystem  
+  express: "^4.18.2"
+  
+  # Development tools
+  "@types/node": "^20.11.5"
+  "@types/react": "^18.2.48"
+  eslint: "^8.56.0"
+  prettier: "^3.2.5"
