@@ -44,7 +44,9 @@
       "Bash(pnpm run:*)",
       "Bash(npx:*)",
       "Bash(timeout 10s pnpm start:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git submodule:*)",
+      "Bash(git rm:*)"
     ],
     "deny": []
   }
