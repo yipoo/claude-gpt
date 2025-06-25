@@ -40,7 +40,11 @@
       "Bash(npx changeset:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(pnpm run:*)",
+      "Bash(npx:*)",
+      "Bash(timeout 10s pnpm start:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }
