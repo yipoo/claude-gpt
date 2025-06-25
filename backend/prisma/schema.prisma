@@ -1,0 +1,172 @@
+// Prisma schema 文件
+// 详细文档: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+enum SubscriptionTier {
+  FREE
+  BASE
+  PRO
+}
+
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  TRIALING
+}
+
+model User {
+  id                           String            @id @default(uuid())
+  
+  @@map("users")
+  email                        String            @unique
+  passwordHash                 String            @map("password_hash")
+  fullName                     String?           @map("full_name")
+  avatarUrl                    String?           @map("avatar_url")
+  phone                        String?
+  preferredLanguage            String            @default("en") @map("preferred_language")
+  themePreference              String            @default("light") @map("theme_preference")
+  
+  // Stripe相关字段
+  stripeCustomerId             String?           @unique @map("stripe_customer_id")
+  subscriptionId               String?           @map("subscription_id")
+  subscriptionTier             SubscriptionTier  @default(FREE) @map("subscription_tier")
+  subscriptionStatus           SubscriptionStatus @default(INACTIVE) @map("subscription_status")
+  subscriptionCurrentPeriodEnd DateTime?         @map("subscription_current_period_end")
+  subscriptionCancelAtPeriodEnd Boolean           @default(false) @map("subscription_cancel_at_period_end")
+  
+  // 使用量统计
+  monthlyMessageCount          Int               @default(0) @map("monthly_message_count")
+  monthlyResetDate             DateTime          @default(now()) @map("monthly_reset_date")
+  totalMessageCount            Int               @default(0) @map("total_message_count")
+  
+  // 元数据
+  emailVerified                Boolean           @default(false) @map("email_verified")
+  emailVerificationToken       String?           @map("email_verification_token")
+  passwordResetToken           String?           @map("password_reset_token")
+  passwordResetExpires         DateTime?         @map("password_reset_expires")
+  lastLoginAt                  DateTime?         @map("last_login_at")
+  lastActiveAt                 DateTime?         @map("last_active_at")
+  
+  // 审计字段
+  createdAt                    DateTime          @default(now()) @map("created_at")
+  updatedAt                    DateTime          @updatedAt @map("updated_at")
+  
+  // 关联关系
+  conversations                Conversation[]
+  messages                     Message[]
+  usageRecords                 UsageRecord[]
+}
+
+
+// 消息模型
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum MessageStatus {
+  SENDING
+  SENT
+  FAILED
+  DELETED
+}
+
+enum MessageContentType {
+  TEXT
+  IMAGE
+  FILE
+}
+
+model Message {
+  id             String            @id @default(uuid())
+  
+  @@map("messages")
+  conversationId String            @map("conversation_id")
+  userId         String            @map("user_id")
+  role           MessageRole
+  content        String            @db.Text
+  contentType    MessageContentType @default(TEXT) @map("content_type")
+  status         MessageStatus     @default(SENT)
+  modelUsed      String?           @map("model_used")
+  totalTokens    Int               @default(0) @map("total_tokens")
+  
+  // 审计字段
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+  
+  // 关联关系
+  conversation   Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageRecords   UsageRecord[]     @relation("MessageUsage")
+  
+  @@index([conversationId, createdAt])
+  @@index([userId, createdAt])
+  @@index([role])
+  @@index([status])
+}
+
+// 对话模型
+model Conversation {
+  id           String    @id @default(uuid())
+  
+  @@map("conversations")
+  userId       String    @map("user_id")
+  title        String
+  messageCount Int       @default(0) @map("message_count")
+  totalTokens  Int       @default(0) @map("total_tokens")
+  lastMessageAt DateTime? @map("last_message_at")
+  
+  // 审计字段
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  
+  // 关联关系
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages     Message[]
+  usageRecords UsageRecord[] @relation("ConversationUsage")
+  
+  @@index([userId, lastMessageAt])
+}
+
+// 使用记录模型
+enum UsageType {
+  MESSAGE
+  IMAGE
+  AUDIO
+}
+
+model UsageRecord {
+  id             String      @id @default(uuid())
+  
+  @@map("usage_records")
+  userId         String      @map("user_id")
+  usageType      UsageType   @map("usage_type")
+  quantity       Int         @default(0)
+  modelUsed      String?     @map("model_used")
+  cost           Float       @default(0)
+  messageId      String?     @map("message_id")
+  conversationId String?     @map("conversation_id")
+  
+  // 审计字段
+  createdAt      DateTime    @default(now()) @map("created_at")
+  
+  // 关联关系
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message        Message?    @relation("MessageUsage", fields: [messageId], references: [id], onDelete: SetNull)
+  conversation   Conversation? @relation("ConversationUsage", fields: [conversationId], references: [id], onDelete: SetNull)
+  
+  @@index([userId, createdAt])
+  @@index([usageType])
+}
