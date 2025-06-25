@@ -39,7 +39,8 @@
       "Bash(chmod:*)",
       "Bash(npx changeset:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git reset:*)"
     ],
     "deny": []
   }
